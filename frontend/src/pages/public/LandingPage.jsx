@@ -54,32 +54,54 @@ const testimonials = [
   },
 ];
 
-const faqs = [
+const leftFaqs = [
   {
-    q: 'How do I book an appointment?',
-    a: 'You can book an appointment through our website by clicking the "Book Appointment" button, or call us directly at +91 6364562123 or 080 41683510.',
+    q: 'How often should I visit the dentist?',
+    a: 'It is recommended to visit a dentist every 6 months for a routine dental check-up and professional teeth cleaning. Regular dental visits help detect cavities, gum disease, and other oral health issues early for effective treatment.',
   },
   {
-    q: 'What safety and sterilization measures do you follow?',
-    a: 'We follow a strict 5-phase sterilization protocol that includes chemical disinfectant washing, ultrasonic debris removal, drying and pouch packing, sterilization in an internationally certified B-class autoclave, and UV chamber storage. All procedures meet CDC guidelines.',
+    q: 'How often should I brush my teeth?',
+    a: 'You should brush your teeth twice a day using fluoride toothpaste, once in the morning and once before bed. Proper brushing helps prevent plaque buildup, tooth decay, and gum disease, ensuring good oral hygiene.',
   },
   {
-    q: 'Do you offer cosmetic dentistry services?',
-    a: 'Yes, we provide a full range of cosmetic dentistry services including teeth whitening, veneers, smile makeovers, and more.',
+    q: 'Are dental X-rays safe?',
+    a: 'Yes, dental X-rays are safe as they use very low levels of radiation. Modern digital dental X-rays further minimize exposure and help dentists accurately diagnose cavities, infections, and underlying oral health problems.',
   },
   {
-    q: 'What are your working hours?',
-    a: 'We are open Monday to Saturday, 9:00 AM to 6:00 PM. We are closed on Sundays.',
+    q: 'When should I take my child to the dentist for the first time?',
+    a: 'It is recommended to take your child to the dentist by their first birthday or when the first tooth appears. Early dental visits help prevent cavities and establish healthy oral care habits from a young age.',
   },
   {
-    q: 'Is the clinic easily accessible in Bangalore?',
-    a: 'Yes, our clinic is conveniently located in Bangalore with easy access via public transport and ample parking nearby.',
-  },
-  {
-    q: 'Do you accept dental insurance?',
-    a: 'Please contact our clinic directly to inquire about insurance partnerships and payment options.',
-  },
+    q: 'How can I maintain good oral hygiene at home?',
+    a: 'Maintaining good oral hygiene includes brushing twice daily, flossing regularly, using mouthwash, and following a healthy diet. For a complete guide, read our detailed blog on maintaining oral health at home.',
+  }
 ];
+
+const rightFaqs=[
+     {
+    q: 'How can i reschedule or cancel my appointment',
+    a: 'to be updated',
+  },
+  {
+    q: 'What is the 2-2-2 rule in dentistry?',
+    a: 'The 2-2-2 rule means brushing your teeth twice a day for 2 minutes and visiting the dentist twice a year. Following this rule helps maintain strong teeth and healthy gums.',
+  },
+  {
+    q: 'Is tooth extraction painful?',
+    a: 'No, tooth extraction is not painful as it is performed under local anesthesia. You may feel slight pressure during the procedure, and any post-treatment discomfort can be managed with medication and proper care.',
+  },
+    {
+    q: 'How often should I get my teeth cleaned?',
+    a: 'Professional teeth cleaning is recommended every 6 months, but frequency may vary based on your oral health. Regular cleaning removes plaque and tartar, helping prevent gum disease and bad breath.',
+  },
+  {
+    q: 'Is teeth whitening safe?',
+    a: 'Yes, professional teeth whitening is safe and effective when performed by a qualified dentist. It helps remove stains and improve your smile without damaging tooth enamel when done correctly.',
+  },
+
+];
+
+const allFaqs=[...leftFaqs,...rightFaqs];
 
 const sterilizationSteps = [
   { step: 'Phase 1', title: 'Chemical Wash', desc: 'Instruments cleaned with chemical disinfectant solution' },
@@ -99,6 +121,24 @@ export default function LandingPage() {
 
   return (
     <div>
+      {/* FAQ SCHEMA MARKUP */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": allFaqs.map(faq => ({
+              "@type": "Question",
+              "name": faq.q,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.a
+              }
+            }))
+          })
+        }}
+      />
       {/* Hero Section */}
       <section className="relative bg-gray-900 text-white overflow-hidden">
         <img
@@ -296,34 +336,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="py-12 sm:py-20 bg-gray-50 scroll-mt-20">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="text-center mb-10 sm:mb-14">
-            <p className="text-teal-700 font-semibold text-sm mb-2 uppercase tracking-wide">Have Questions?</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
-          </div>
-          <div className="space-y-3">
-            {faqs.map((faq, i) => (
-              <div key={i} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left"
-                >
-                  <span className="font-medium text-gray-900 text-sm sm:text-base pr-4">{faq.q}</span>
-                  {openFaq === i ? <ChevronUp size={18} className="text-gray-400 shrink-0" /> : <ChevronDown size={18} className="text-gray-400 shrink-0" />}
-                </button>
-                {openFaq === i && (
-                  <div className="px-5 pb-4">
-                    <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-12 sm:py-16 bg-teal-700 text-white">
         <div className="max-w-3xl mx-auto px-4 text-center">
@@ -337,6 +349,76 @@ export default function LandingPage() {
               <Phone size={18} /> +91 6364562123
             </a>
           </div>
+        </div>
+      </section>      
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-12 sm:py-20 bg-gray-50 scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-10 sm:mb-14">
+            <p className="text-teal-700 font-semibold text-sm mb-2 uppercase tracking-wide">Have Questions?</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
+          </div>
+           <div className="flex flex-col md:flex-row gap-4">
+              {/* Left Column */}
+              <div className="flex-1 space-y-4">
+                {leftFaqs.map((faq, i) => {
+                  return (
+                    <div key={faq.q} className="bg-white rounded-xl border border-gray-200 overflow-hidden mx-3">
+                      <button
+                        onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                        className="w-full flex items-center justify-between px-5 py-4 text-left"
+                      >
+                        <span className="font-medium text-gray-900 text-sm sm:text-base pr-4">
+                          {faq.q}
+                        </span>
+                        {openFaq === i ? (
+                          <ChevronUp size={18} className="text-gray-400 shrink-0" />
+                        ) : (
+                          <ChevronDown size={18} className="text-gray-400 shrink-0" />
+                        )}
+                      </button>
+
+                      {openFaq === i && (
+                        <div className="px-5 pb-4">
+                          <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Right Column */}
+              <div className="flex-1 space-y-4">
+                {rightFaqs.map((faq, i) => {
+                  const index = i + leftFaqs.length; // 5–9 (IMPORTANT)
+                  return (
+                    <div key={faq.q} className="bg-white rounded-xl border border-gray-200 overflow-hidden mx-3">
+                      <button
+                        onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                        className="w-full flex items-center justify-between px-5 py-4 text-left"
+                      >
+                        <span className="font-medium text-gray-900 text-sm sm:text-base pr-4">
+                          {faq.q}
+                        </span>
+                        {openFaq === index ? (
+                          <ChevronUp size={18} className="text-gray-400 shrink-0" />
+                        ) : (
+                          <ChevronDown size={18} className="text-gray-400 shrink-0" />
+                        )}
+                      </button>
+
+                      {openFaq === index && (
+                        <div className="px-5 pb-4">
+                          <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>   
         </div>
       </section>
 
