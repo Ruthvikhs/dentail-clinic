@@ -72,7 +72,15 @@ jobs:
 
   deploy:
     needs: [build-backend, build-cron, build-frontend]
-    if: always() && !failure() && !cancelled()
+    # Run deploy if every needed job either succeeded or was skipped (not changed).
+    # This correctly handles the case where only a subset of services changed.
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled') &&
+      (needs.build-backend.result == 'success' || needs.build-backend.result == 'skipped') &&
+      (needs.build-cron.result == 'success'    || needs.build-cron.result == 'skipped') &&
+      (needs.build-frontend.result == 'success' || needs.build-frontend.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to VM
@@ -82,8 +90,15 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SECRET_KEY }}
           script: |
+            set -e
+
             cd /home/${{ secrets.VM_USER }}/app
 
-            docker-compose up -d --pull always backend frontend cron
+            # Pull latest docker-compose config from repo so server is never stale
+            git pull origin main
 
+            # Pull updated images and restart all services including nginx
+            docker compose up -d --pull always backend frontend cron nginx
+
+            # Clean up dangling images to free disk space
             docker image prune -f
